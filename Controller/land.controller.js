@@ -1,5 +1,5 @@
 var db = require('../db')
-const Email = require('./sendEmail.controller');
+const EmailPlugin = require('./sendEmail.controller');
 
 module.exports.getFullLand = (req,res)=>{
     const sql = "SELECT land.*,category.Type FROM `land` INNER JOIN `category` ON land.IdCategory=category.ID";
@@ -26,16 +26,17 @@ module.exports.getLandDetails = (req,res)=>{
 
 module.exports.addSchedule = (req,res)=>{
     const {idCustommer,idLand,Time,Email} = req.body;
-    const sql = 'INSERT INTO schedule (`idCustomer`,`idLand`,`Time`) VALUES(?,?,?)'
+    console.log(idCustommer,idLand,Time,Email)
+    const sql = 'INSERT INTO shedule (`idCustommer`,`idLand`,`Time`) VALUES(?,?,?)'
     db.query(sql,[idCustommer,idLand,Time],(err,result)=>{
         if(err){
             return res.json({msg:err})
         }else{
             //Send for customer
-            Email.SendEmail(Email,"Đặt lịch thành công",
+            EmailPlugin.SendEmail(Email,"Đặt lịch thành công",
             `Bạn đã đặt lịch hẹn thành công vào ${new Date(Time).toLocaleString()}`
             )
-            Email.SendEmail(process.env.EMAIL,"Nhận được lịch hẹn tư vấn",
+            EmailPlugin.SendEmail(process.env.EMAIL,"Nhận được lịch hẹn tư vấn",
             `Khách đặt lịch tư vấn vào lúc ${new Date(Time).toLocaleString()}`
             )
             return res.json({msg:"Success"})
