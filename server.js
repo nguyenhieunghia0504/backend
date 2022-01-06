@@ -13,5 +13,6 @@ app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({extended:true}))
 
 app.use("/api1",require('./Route/tets.route'))
+app.use("/user",require('./Route/user.route'))
 
 app.listen(port,()=>console.log(`App listening ${port}`))
