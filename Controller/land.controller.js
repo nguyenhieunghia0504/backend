@@ -2,7 +2,7 @@ var db = require('../db')
 const Email = require('./sendEmail.controller');
 
 module.exports.getFullLand = (req,res)=>{
-    const sql = "SELECT * FROM land";
+    const sql = "SELECT land.*,category.Type FROM `land` INNER JOIN `category` ON land.IdCategory=category.ID";
     db.query(sql,(err,result)=>{
         if(err){
             return res.json({msg:err})
@@ -14,7 +14,7 @@ module.exports.getFullLand = (req,res)=>{
 
 module.exports.getLandDetails = (req,res)=>{
     const {ID} = req.body;
-    const sql = 'SELECT * FROM land WHERE ID = ?'
+    const sql = 'SELECT land.*,category.Type FROM `land` INNER JOIN `category` ON land.IdCategory=category.ID WHERE land.ID = ?'
     db.query(sql,[ID],(err,result)=>{
         if(err){
             return res.json({msg:err})
