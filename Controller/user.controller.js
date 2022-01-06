@@ -57,13 +57,14 @@ module.exports.login = (req,res)=>{
                 });
             }else{
                 //Confirm password
-                const passMatch = await bcrypt.compare(password,rows[0].password);
+                const passMatch = await bcrypt.compare(password,rows[0].Password);
+                console.log(passMatch)
                 if(!passMatch){
                     return res.status(422).json({
                         msg: "Incorrect password",
                     });
                 }else{
-                    getInforUser(rows[0].ID)
+                    getInforUser(rows[0].ID,res)
                 }
             }
         })
@@ -72,8 +73,9 @@ module.exports.login = (req,res)=>{
     }
 }
 
-const getInforUser = (id)=>{
-    const sql = "SELECT user.*,custommer.* FROM user LEFT JOIN custommer ON user.ID=custommer.idUser WHERE user.ID ="
+const getInforUser = (id,res)=>{
+    console.log(id)
+    const sql = "SELECT user.*,custommer.* FROM user LEFT JOIN custommer ON user.ID=custommer.idUser WHERE user.ID = ?"
     db.query(sql,[id],(err,result)=>{
         if(err){
             return res.json({msg:err})
