@@ -7,24 +7,24 @@ module.exports.register = (req,res)=>{
         const id = uuid.v1();
         const {email,password,username,name,address,phone} = req.body;
       
-        const sql = 'SELECT * FROM user WHERE email = ? ';
+        const sql = 'SELECT * FROM user WHERE UserName = ? ';
         db.query(sql,[email],async(err,rows,fields)=>{
             //Check email exist ?
             if(rows.length > 0 ){
                 return res.status(201).json({
-                    msg: "The E-mail already in use",
+                    msg: "The Username already in use",
                 });
             }
             //create password with code bcrypt
             const hashPass = await bcrypt.hash(password, 12);
-            const sqlRegister = 'INSERT INTO `user`(`id`,`username`,`password`) VALUES(?,?,?)';
+            const sqlRegister = 'INSERT INTO `user`(`ID`,`UserName`,`Password`) VALUES(?,?,?)';
             db.query(sqlRegister,[id,username,email,hashPass,name,ruler],(err,rows,fields)=>{
                 if (err) {
                     return res.json({msg:err});
                 }
                 else{
-                    const sql_customer = 'INSERT INTO `customer`(`name`,`email`,`phone`,`address`) VALUES(?,?,?,?)'
-                    db.query(sql_customer,[name,email,phone,address],(err,result)=>{
+                    const sql_customer = 'INSERT INTO `customer`(`idUser`,`Name`,`Email`,`Phone`,`Address`) VALUES(?,?,?,?,?)'
+                    db.query(sql_customer,[id,name,email,phone,address],(err,result)=>{
                         if(err){
                             return res.json({msg:err});
                         }else{
@@ -44,7 +44,7 @@ module.exports.register = (req,res)=>{
 module.exports.login = (req,res)=>{
     try {
         const {username,password} = req.body;
-        const sql = 'SELECT * FROM user WHERE Username = ? ';
+        const sql = 'SELECT * FROM user WHERE UserName = ? ';
     
         db.query(sql,[username],async(err,rows,fields)=>{
             if (err) {
@@ -73,7 +73,7 @@ module.exports.login = (req,res)=>{
 }
 
 const getInforUser = (id)=>{
-    const sql = "SELECT user.*,customer.* FROM user INNER JOIN customer ON user.ID=customer.IdUser WHERE ID = ?"
+    const sql = "SELECT user.*,customer.* FROM user INNER JOIN customer ON user.ID=customer.idUser WHERE ID = ?"
     db.query(sql,[id],(err,result)=>{
         if(err){
             return res.json({msg:err})
