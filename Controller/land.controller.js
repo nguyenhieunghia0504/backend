@@ -43,3 +43,15 @@ module.exports.addSchedule = (req,res)=>{
         }
     })
 }
+
+module.exports.getScheduleByIdUser = (req,res)=>{
+    const {idUser} = req.body;
+    const sql = 'SELECT shedule.*,land.SubTitle FROM shedule INNER JOIN land ON shedule.idLand=land.ID WHERE shedule.idCustommer = ?';
+    db.query(sql,[idUser],(err,result)=>{
+        if(err){
+            return res.json({msg:err})
+        }else{
+            return res.json(result)
+        }
+    })
+}
