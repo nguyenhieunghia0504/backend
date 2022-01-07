@@ -55,3 +55,15 @@ module.exports.getScheduleByIdUser = (req,res)=>{
         }
     })
 }
+
+module.exports.searchLand = (req,res)=>{
+    const {datasearch} = req.body;
+    const sql = `SELECT * FROM land WHERE SubTitle LIKE "%${datasearch}%"`
+    db.query(sql,(err,rows)=>{
+        if(err){
+            return res.json({msg:err});
+        }else{
+            return res.json(rows)
+        }
+    })
+}
