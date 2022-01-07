@@ -23,7 +23,17 @@ module.exports.getLandDetails = (req,res)=>{
         }
     })
 }
-
+module.exports.getHomeDetails = (req,res)=>{
+    const {ID} = req.body;
+    const sql = 'SELECT detailland.*,land.SubTitle,land.Price FROM `detailland` INNER JOIN land ON detailland.idLand=land.ID WHERE land.ID=?'
+    db.query(sql,[ID],(err,result)=>{
+        if(err){
+            return res.json({msg:err})
+        }else{
+            return res.json(result)
+        }
+    })
+}
 module.exports.addSchedule = (req,res)=>{
     const {idCustommer,idLand,Time,Email} = req.body;
     console.log(idCustommer,idLand,Time,Email)
